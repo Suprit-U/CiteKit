@@ -22,7 +22,7 @@ jobs:
       - name: Tests
         run: pytest -q
       - name: Evaluation harness
-        run: citekit eval evals/golden.json
+        run: citekit eval data/docs evals/golden.json
       - name: Package build
         run: pip install build && python -m build
 

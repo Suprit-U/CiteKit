@@ -116,3 +116,27 @@ def test_settings_validation():
 
 def test_extractive_answerer_handles_empty_query(kit):
     assert ExtractiveAnswerer().answer("", kit.retrieve("library")).text == ""
+
+class _UncitedProvider:
+    """An LLM provider that answers plausibly but cites nothing."""
+
+    name = "uncited-test-double"
+
+    def generate(self, prompt: str) -> str:
+        return "The library is open from 08:00 to 20:00 Monday to Friday and closes at 23:30."
+
+
+def test_answer_without_citation_markers_is_refused(kit):
+    """An LLM answer with no ``[n]`` markers must be blocked by the citation gate.
+
+    Regression test: ``cited_markers=answer.cited_markers or None`` turned the empty
+    list into ``None``, which the guardrail reads as "no citation check requested",
+    so an uncited answer used to be returned to the user.
+    """
+    from citekit.answering import LLMAnswerer
+
+    answerer = LLMAnswerer(_UncitedProvider())
+    result = kit.ask("When does the library close on a Friday?", answerer=answerer)
+    assert not result.allowed
+    assert result.answer == ""
+    assert "citation" in result.reason

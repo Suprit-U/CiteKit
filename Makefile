@@ -23,7 +23,7 @@ test:
 	$(BIN)/python -m pytest -q
 
 eval:
-	$(BIN)/citekit eval evals/golden.json
+	$(BIN)/citekit eval data/docs evals/golden.json
 
 lint:
 	$(BIN)/python -m compileall -q src

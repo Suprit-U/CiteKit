@@ -99,8 +99,8 @@ documents ──▶ normalise ──▶ chunk ──▶ ┌─ BM25 index ──
    unsupported files skipped. Every document gets a stable id (slug + content hash),
    so re-indexing an unchanged folder produces identical ids.
 2. **Chunk** — paragraphs are split into sentence units and packed to a character
-   budget with overlap. Overlap is trimmed against the current chunk so a chunk can
-   never exceed its budget.
+   budget with overlap. Overlap is trimmed against the current chunk, and a single
+   sentence longer than the budget is hard-split, so every chunk stays within `size`.
 3. **Retrieve** — BM25 (k1 1.5, b 0.75) and cosine similarity over hashed
    character-n-gram embeddings are fused with Reciprocal Rank Fusion
    (`1/(k + rank)`), which needs no score normalisation between the two systems.
@@ -123,7 +123,7 @@ documents ──▶ normalise ──▶ chunk ──▶ ┌─ BM25 index ──
 ```python
 from citekit import CiteKit
 
-kit = CiteKit.from_directory("data/docs", chunk_size=700, chunk_overlap=140, top_k=5)
+kit = CiteKit.from_directory("data/docs")   # tuning goes through Settings(...)
 result = kit.ask("What is the borrowing limit for a final-year student?")
 print(result.answer, result.support, result.citations)
 ```
@@ -136,7 +136,7 @@ print(result.answer, result.support, result.citations)
 | `rrf_k` | 60 | Reciprocal Rank Fusion smoothing constant |
 | `min_support` | 0.6 | minimum per-sentence support to allow an answer |
 | `use_dense` | True | enable the vector side of the hybrid retriever |
-| `embedder_dim` | 384 | hashing embedding width |
+| `embedder_dim` | 384 | hashing embedding width (declared on `Settings`; construct `HashingEmbedder(dim=...)` to actually change it) |
 
 ## HTTP API
 

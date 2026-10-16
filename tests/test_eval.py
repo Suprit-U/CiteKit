@@ -6,6 +6,10 @@ from citekit.eval import load_cases, metrics, run
 from citekit.loaders import Document, load_directory, load_file, normalize_text
 from citekit.pipeline import CiteKit
 
+# Resolve the bundled corpus and golden set from the repository root so the
+# suite passes no matter which directory pytest was started from.
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
 
 def test_recall_at_k_counts_relevant_items():
     ranked = ["a", "b", "c", "d"]
@@ -37,7 +41,7 @@ def test_load_cases_reads_golden_file(tmp_path):
 
 
 def test_runner_measures_retrieval_and_abstention(kit):
-    cases = load_cases(Path("evals/golden.json"))
+    cases = load_cases(REPO_ROOT / "evals" / "golden.json")
     report = run(kit, cases, k=5)
     assert report.cases == len(cases)
     assert 0.0 <= report.retrieval["recall@3"] <= 1.0
@@ -48,7 +52,7 @@ def test_runner_measures_retrieval_and_abstention(kit):
 
 
 def test_golden_set_abstains_on_unanswerable_questions(kit):
-    cases = load_cases(Path("evals/golden.json"))
+    cases = load_cases(REPO_ROOT / "evals" / "golden.json")
     report = run(kit, cases, k=5)
     assert report.answer["abstain_on_unanswerable"] == 1.0
 
@@ -85,7 +89,7 @@ def test_load_directory_raises_for_file(tmp_path):
 
 
 def test_repo_corpus_answers_and_refuses():
-    kit = CiteKit(settings=Settings()).index(load_directory("data/docs"))
+    kit = CiteKit(settings=Settings()).index(load_directory(REPO_ROOT / "data" / "docs"))
     stats = kit.stats()
     assert stats["documents"] >= 4 and stats["chunks"] > stats["documents"]
 

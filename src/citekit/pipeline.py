@@ -143,7 +143,9 @@ def _run_guardrail(question: str, chunks: list[RetrievedChunk], answerer: Answer
         support=answer.support,
         threshold=min_support,
         retrieved=len(chunks),
-        cited_markers=answer.cited_markers or None,
+        # An empty marker list means "the answer cited nothing" -- it must reach the
+        # gate and block, not degrade into None (which means "not checked").
+        cited_markers=list(answer.cited_markers),
         lexical_grounded=any(c.bm25_rank is not None for c in chunks),
         coverage=_coverage(question, chunks),
     )

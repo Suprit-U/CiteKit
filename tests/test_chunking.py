@@ -43,3 +43,17 @@ def test_chunk_text_rejects_overlap_not_smaller_than_size():
 
 def test_chunk_text_empty_input_returns_empty():
     assert chunk_text("   ", size=100, overlap=10) == []
+
+def test_chunk_size_budget_holds_for_a_sentence_longer_than_the_budget():
+    """A single sentence longer than ``size`` must be hard-split, not kept whole.
+
+    Regression test: an unbroken 1000-character "sentence" used to become a single
+    over-budget chunk, so the size invariant silently did not hold.
+    """
+    blob = "Supercalifragilisticexpialidocious" * 40
+    for size in (700, 200, 50, 10, 1):
+        chunks = chunk_text(blob, size=size, overlap=0)
+        assert chunks, f"no chunks produced for size={size}"
+        assert all(len(c.text) <= size for c in chunks), (
+            f"size={size}: chunk of {max(len(c.text) for c in chunks)} chars exceeds the budget"
+        )

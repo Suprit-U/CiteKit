@@ -32,7 +32,9 @@ Text is reduced to sentence units, then packed greedily into chunks under
 `room = chunk_size - len(unit) - 1` before being carried forward, which guarantees the
 budget is respected even when a single sentence is large.
 
-`Chunk.position` records the character offset in the parent document, so citations can
+`Chunk.position` is an offset into the accumulated unit buffer used while packing the
+chunk, not an index into the original document -- do not use it to slice the source
+file. Each chunk also carries `doc_id` and `source`, which are what a citation shows.
 point at a location rather than just a document.
 
 ### 3. Lexical retrieval (`bm25.py`)
@@ -85,7 +87,7 @@ coverage, refuse.
 ### 7. Answering (`answering.py`)
 
 The extractive answerer ranks sentences by their overlap with the question, keeps the
-best ones from distinct chunks, and appends `[n]`. Support for a chosen sentence is
+best-scoring ones (it does **not** enforce one sentence per chunk), and appends `[n]`. Support for a chosen sentence is
 measured against **its own cited chunk** — an earlier version scored every sentence
 against the whole retrieved pool, which inflated support for sentences that matched a
 different chunk. That was a bug, and the tests now pin the behaviour.

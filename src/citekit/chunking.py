@@ -58,6 +58,16 @@ def chunk_text(
         sentences = split_sentences(para)
         buffer = ""
         for sentence in sentences:
+            if len(sentence) > size:
+                # A single sentence longer than the budget (no terminal punctuation,
+                # or a machine-generated blob) must be hard-split, otherwise the unit
+                # -- and every chunk containing it -- would exceed ``size``.
+                if buffer:
+                    units.append(buffer)
+                    buffer = ""
+                for offset in range(0, len(sentence), size):
+                    units.append(sentence[offset : offset + size])
+                continue
             if buffer and len(buffer) + 1 + len(sentence) > size:
                 units.append(buffer)
                 buffer = sentence
