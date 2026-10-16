@@ -1,0 +1,100 @@
+[
+  {
+    "id": "lib-hours",
+    "question": "When does the library close on a Friday?",
+    "answerable": true,
+    "must_contain": [
+      "20:00"
+    ],
+    "relevant_sources": [
+      "library_rules.md"
+    ]
+  },
+  {
+    "id": "lib-borrow-limit",
+    "question": "How many books can an undergraduate borrow?",
+    "answerable": true,
+    "must_contain": [
+      "four books"
+    ],
+    "relevant_sources": [
+      "library_rules.md"
+    ]
+  },
+  {
+    "id": "guest-wifi",
+    "question": "How do I log in to the campus guest wifi network?",
+    "answerable": true,
+    "must_contain": [
+      "registration number"
+    ],
+    "relevant_sources": [
+      "network_policy.md"
+    ]
+  },
+  {
+    "id": "wifi-quota",
+    "question": "What is the monthly bandwidth cap on the secured network?",
+    "answerable": true,
+    "must_contain": [
+      "30 gb"
+    ],
+    "relevant_sources": [
+      "network_policy.md"
+    ]
+  },
+  {
+    "id": "curfew",
+    "question": "What is the curfew time for residents on a weekday?",
+    "answerable": true,
+    "must_contain": [
+      "23:30"
+    ],
+    "relevant_sources": [
+      "residence_rules.md"
+    ]
+  },
+  {
+    "id": "internship-min",
+    "question": "How long must an internship be?",
+    "answerable": true,
+    "must_contain": [
+      "eight weeks"
+    ],
+    "relevant_sources": [
+      "placement_policy.md"
+    ]
+  },
+  {
+    "id": "fines",
+    "question": "How much is the fine for an overdue book?",
+    "answerable": true,
+    "must_contain": [
+      "rs 2 per day"
+    ],
+    "relevant_sources": [
+      "library_rules.md"
+    ]
+  },
+  {
+    "id": "unanswerable-1",
+    "question": "What is the hostel mess menu for Saturday lunch?",
+    "answerable": false,
+    "must_contain": [],
+    "relevant_sources": []
+  },
+  {
+    "id": "unanswerable-2",
+    "question": "How do I apply for a scholarship for semester fees?",
+    "answerable": false,
+    "must_contain": [],
+    "relevant_sources": []
+  },
+  {
+    "id": "unanswerable-3",
+    "question": "Which bus route goes to the airport on Sunday morning?",
+    "answerable": false,
+    "must_contain": [],
+    "relevant_sources": []
+  }
+]
